@@ -71,13 +71,14 @@ function setupCardListeners() {
         'songs/cs',
         'songs/rock',
         'songs/pop',
-        'songs'
+        'songs/mala'
+        
       ];
       const folderToLoad = folders[index] || 'songs';
       loadMusicFolder(folderToLoad);
       const mainHeading = document.getElementById('main-h1');
       if (mainHeading) {
-        const folderNames = ['CS Songs', 'Rock Songs', 'Pop Songs', 'All Songs'];
+        const folderNames = ['Mr Chatman', 'Rock Songs', 'Pop Songs', 'All Songs'];
         mainHeading.textContent = folderNames[index] || 'Songs';
       }
       cards.forEach(c => c.classList.remove('active'));
@@ -102,11 +103,11 @@ function getSongs(folder = 'songs') {
       const songsUl = document.querySelector('.songsList').getElementsByTagName("ul")[0];
       songsUl.innerHTML = '';
       for (const song of data) {
+      // <div>Produced by Fasol</div>
         songsUl.innerHTML += ` <li>
                             <img class="invert" src="resourses/musik.svg">
                             <div class="songInfo">
                                 <div>${song}</div>
-                                <div>Waris</div>
                             </div>
                             <div class="playCont">
                                 <div class="playNow">
@@ -162,9 +163,13 @@ function setupPlaybarListeners(data) {
 function updateTimeDisplay() {
   const playbarSongInfo = document.querySelector(".playbar .songDetail");
   const songTime = document.querySelector(".songTime");
+  const seekBar = document.querySelector(".seekBar");
+  const seekCircle = document.querySelector(".seekCircle");
+  
   if (playbarSongInfo && currentSongName) {
     playbarSongInfo.innerHTML = currentSongName;
   }
+  
   if (songTime) {
     const currentTime = Math.floor(currentSong.currentTime);
     const duration = Math.floor(currentSong.duration) || 0;
@@ -173,6 +178,23 @@ function updateTimeDisplay() {
     const durationMin = Math.floor(duration / 60);
     const durationSec = duration % 60;
     songTime.innerHTML = `${currentMin}:${currentSec.toString().padStart(2, '0')} / ${durationMin}:${durationSec.toString().padStart(2, '0')}`;
+  }
+  
+  // Update seekbar progress with sunset gradient
+  if (seekBar && currentSong.duration) {
+    const percent = (currentSong.currentTime / currentSong.duration) * 100;
+    seekBar.style.setProperty('--seek-percent', percent + '%');
+    
+    if (seekCircle) {
+      seekCircle.style.left = percent + "%";
+      
+      // Add playing animation
+      if (!currentSong.paused) {
+        seekCircle.classList.add('playing');
+      } else {
+        seekCircle.classList.remove('playing');
+      }
+    }
   }
 }
 
@@ -219,11 +241,18 @@ function setupVolumeControl() {
 function setupSeekBar() {
   const seekBar = document.querySelector(".seekBar");
   if (seekBar) {
-    const newSeekBar = seekBar.cloneNode(true);
+    const newSeekBar = seekBar.cloneNode(false);
     seekBar.parentNode.replaceChild(newSeekBar, seekBar);
+    
+    // Recreate seekCircle inside
+    const seekCircle = document.createElement('div');
+    seekCircle.className = 'seekCircle';
+    newSeekBar.appendChild(seekCircle);
+    
     newSeekBar.addEventListener("click", e => {
       let percent = (e.offsetX / e.target.getBoundingClientRect().width) * 100;
-      document.querySelector(".seekCircle").style.left = percent + "%";
+      seekCircle.style.left = percent + "%";
+      newSeekBar.style.setProperty('--seek-percent', percent + '%');
       currentSong.currentTime = ((currentSong.duration) * percent) / 100;
     });
   }
