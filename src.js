@@ -105,14 +105,14 @@ function getSongs(folder = 'songs') {
       for (const song of data) {
       // <div>Produced by Fasol</div>
         songsUl.innerHTML += ` <li>
-                            <img class="invert" src="resourses/musik.svg">
+                            <img class="invert" src="https://raw.githubusercontent.com/warisnew2121-pixel/music-app/refs/heads/main/resourses/musik.svg">
                             <div class="songInfo">
                                 <div>${song}</div>
                             </div>
                             <div class="playCont">
                                 <div class="playNow">
                                     <span>Play Now</span>
-                                    <img class="invert" src="resourses/play-button.svg">
+                                    <img class="invert" src="https://raw.githubusercontent.com/warisnew2121-pixel/music-app/refs/heads/main/resourses/play-button.svg">
                                 </div>
                             </div>
                         </li>`;
@@ -141,13 +141,13 @@ function setupPlaybarListeners(data) {
       if (currentSong.paused) {
         if (currentSong.src) {
           currentSong.play();
-          document.getElementById("btnImg").src = 'resourses/pause.svg';
+          document.getElementById("btnImg").src = 'https://raw.githubusercontent.com/warisnew2121-pixel/music-app/refs/heads/main/resourses/pause.svg';
         } else if (data.length > 0) {
           playMusik(data[0]);
         }
       } else {
         currentSong.pause();
-        document.getElementById("btnImg").src = 'resourses/play-button.svg';
+        document.getElementById("btnImg").src = 'https://raw.githubusercontent.com/warisnew2121-pixel/music-app/refs/heads/main/resourses/play-button.svg';
       }
     });
   }
