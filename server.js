@@ -88,11 +88,14 @@ app.get('/folders', (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-  console.log(`Available endpoints:`);
-  console.log(`- GET http://localhost:${port}/songs (main songs folder)`);
-  console.log(`- GET http://localhost:${port}/songs/cs (songs/cs folder)`);
-  console.log(`- GET http://localhost:${port}/songs/rock (songs/rock folder)`);
-  console.log(`- GET http://localhost:${port}/folders (list all folders)`);
-});
+module.exports = app;
+
+
+// app.listen(port, () => {
+//   console.log(`Server is running at http://localhost:${port}`);
+//   console.log(`Available endpoints:`);
+//   console.log(`- GET http://localhost:${port}/songs (main songs folder)`);
+//   console.log(`- GET http://localhost:${port}/songs/cs (songs/cs folder)`);
+//   console.log(`- GET http://localhost:${port}/songs/rock (songs/rock folder)`);
+//   console.log(`- GET http://localhost:${port}/folders (list all folders)`);
+// });
