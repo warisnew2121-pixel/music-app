@@ -1,27 +1,21 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(styles\\.css|responsive\\.css|utility\\.css|src\\.js)",
-      "dest": "/$1"
+      "source": "/(styles\\.css|responsive\\.css|utility\\.css|src\\.js)",
+      "destination": "/$1"
     },
     {
-      "src": "/resourses/(.*)",
-      "dest": "/resourses/$1"
+      "source": "/resourses/(.*)",
+      "destination": "/resourses/$1"
     },
     {
-      "src": "/songs/(.*)",
-      "dest": "/songs/$1"
+      "source": "/songs/(.*)",
+      "destination": "/songs/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/server.js"
+      "source": "/(.*)",
+      "destination": "/server.js"
     }
   ]
 }
