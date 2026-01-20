@@ -4,12 +4,28 @@
     {
       "src": "server.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.js",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/(.*)\\.(css|js|png|jpg|jpeg|svg|ico|mp3|wav|ogg|m4a)$",
-      "dest": "/$1.$2"
+      "src": "/(styles|responsive|utility)\\.css",
+      "dest": "/$1.css"
+    },
+    {
+      "src": "/src\\.js",
+      "dest": "/src.js"
+    },
+    {
+      "src": "/resourses/(.*)",
+      "dest": "/resourses/$1"
     },
     {
       "src": "/(.*)",
