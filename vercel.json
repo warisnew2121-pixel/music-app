@@ -4,20 +4,20 @@
     {
       "src": "server.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "resourses/**",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
+    {
+      "src": "/(styles\\.css|responsive\\.css|utility\\.css|src\\.js)",
+      "dest": "/$1"
+    },
     {
       "src": "/resourses/(.*)",
       "dest": "/resourses/$1"
     },
     {
-      "src": "/(.*)\\.(css|js)$",
-      "dest": "/$1.$2"
+      "src": "/songs/(.*)",
+      "dest": "/songs/$1"
     },
     {
       "src": "/(.*)",
