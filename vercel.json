@@ -6,26 +6,18 @@
       "use": "@vercel/node"
     },
     {
-      "src": "*.css",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.js",
+      "src": "resourses/**",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/(styles|responsive|utility)\\.css",
-      "dest": "/$1.css"
-    },
-    {
-      "src": "/src\\.js",
-      "dest": "/src.js"
-    },
-    {
       "src": "/resourses/(.*)",
       "dest": "/resourses/$1"
+    },
+    {
+      "src": "/(.*)\\.(css|js)$",
+      "dest": "/$1.$2"
     },
     {
       "src": "/(.*)",
