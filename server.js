@@ -95,7 +95,7 @@ app.get("/", (req, res) => {
 
 module.exports = app;
 
-//added commment to test if server.js is being read
+
 // app.listen(port, () => {
 //   console.log(`Server is running at http://localhost:${port}`);
 //   console.log(`Available endpoints:`);
