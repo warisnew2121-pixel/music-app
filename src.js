@@ -4,6 +4,13 @@ let currentSongName = ''; // Track current song name
 let currentIndex = 0;
 let currentFolder = 'songs'; // Track current folder
 
+let videoSongs = [
+  { name: "God's Masterpiece", url: 'https://youtu.be/oRX6_x7y_lo?si=MeGk6NrMdQUHeOwQ' }
+]
+
+
+
+
 const playMusik = (track) => {
   currentSong.src = `/${currentFolder}/${track}`;
   currentSongName = track; // Store current song name
@@ -266,4 +273,210 @@ document.addEventListener('DOMContentLoaded', () => {
   setupNavigationListeners();
   setupCardListeners();
   getSongs();
+  setupVideoSection();
 });
+
+// ─────────────────────────────────────────
+//  VIDEO SECTION
+// ─────────────────────────────────────────
+
+function setupVideoSection() {
+  // Inject "Videos" card into existing cardContainer
+  const cardContainer = document.querySelector('.cardContainer');
+  if (cardContainer) {
+    const videoCard = document.createElement('div');
+    videoCard.className = 'card video-card';
+    videoCard.id = 'videoAlbumCard';
+    videoCard.innerHTML = `
+      <div class="play">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 20V4L19 12L5 20Z" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=200&fit=crop" alt="Music Videos">
+      <h1>Music Videos</h1>
+      <p>Watch video albums</p>
+    `;
+    cardContainer.appendChild(videoCard);
+    videoCard.addEventListener('click', openVideoPopup);
+  }
+
+  // Inject popup HTML into body
+  const popup = document.createElement('div');
+  popup.id = 'videoPopup';
+  popup.innerHTML = `
+    <div id="videoPopupInner">
+      <div id="videoPopupHeader">
+        <span id="videoPopupTitle">🎬 Music Videos</span>
+        <button id="videoPopupClose">✕</button>
+      </div>
+      <div id="videoPopupBody">
+        <div id="videoPlayerWrap">
+          <iframe
+            id="videoPlayer"
+            src=""
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+          ></iframe>
+          <div id="videoNowPlaying"></div>
+        </div>
+        <ul id="videoSongList"></ul>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(popup);
+
+  // Inject styles
+  const style = document.createElement('style');
+  style.textContent = `
+    #videoPopup {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    #videoPopup.open { display: flex; }
+    #videoPopupInner {
+      background: #1a1a1a;
+      border-radius: 14px;
+      width: 90%;
+      max-width: 820px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+    }
+    #videoPopupHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: #111;
+      border-bottom: 1px solid #333;
+    }
+    #videoPopupTitle {
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    #videoPopupClose {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    #videoPopupClose:hover { background: #333; color: #fff; }
+    #videoPopupBody {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    #videoPlayerWrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #000;
+      min-width: 0;
+    }
+    #videoPlayer {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border: none;
+    }
+    #videoNowPlaying {
+      color: #ccc;
+      font-size: 0.85rem;
+      padding: 10px 16px;
+      background: #111;
+      min-height: 36px;
+    }
+    #videoSongList {
+      width: 230px;
+      min-width: 180px;
+      overflow-y: auto;
+      background: #161616;
+      list-style: none;
+      margin: 0;
+      padding: 8px 0;
+      border-left: 1px solid #2a2a2a;
+    }
+    #videoSongList li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      color: #ccc;
+      cursor: pointer;
+      font-size: 0.88rem;
+      border-bottom: 1px solid #222;
+      transition: background 0.15s;
+    }
+    #videoSongList li:hover { background: #252525; color: #fff; }
+    #videoSongList li.active { background: #2a2a2a; color: #fff; }
+    #videoSongList li .vid-icon { font-size: 1.1rem; flex-shrink: 0; }
+    @media (max-width: 600px) {
+      #videoPopupBody { flex-direction: column; }
+      #videoSongList { width: 100%; border-left: none; border-top: 1px solid #2a2a2a; max-height: 180px; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Close popup on button or backdrop click
+  document.getElementById('videoPopupClose').addEventListener('click', closeVideoPopup);
+  popup.addEventListener('click', (e) => {
+    if (e.target === popup) closeVideoPopup();
+  });
+}
+
+function openVideoPopup() {
+  const popup = document.getElementById('videoPopup');
+  const list = document.getElementById('videoSongList');
+  list.innerHTML = '';
+
+  videoSongs.forEach((video, index) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="vid-icon">▶</span><span>${video.name}</span>`;
+    li.addEventListener('click', () => playVideoSong(video, li));
+    list.appendChild(li);
+  });
+
+  // Auto-play first video
+  if (videoSongs.length > 0) {
+    playVideoSong(videoSongs[0], list.firstChild);
+  }
+
+  popup.classList.add('open');
+}
+
+function closeVideoPopup() {
+  const popup = document.getElementById('videoPopup');
+  popup.classList.remove('open');
+  // Stop video on close
+  document.getElementById('videoPlayer').src = '';
+  document.getElementById('videoNowPlaying').textContent = '';
+}
+
+function playVideoSong(video, listItem) {
+  // Highlight active item
+  document.querySelectorAll('#videoSongList li').forEach(li => li.classList.remove('active'));
+  if (listItem) listItem.classList.add('active');
+
+  // Convert YouTube watch URL to embed URL
+  let embedUrl = video.url;
+  const ytMatch = video.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+  if (ytMatch) {
+    embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1`;
+  }
+
+  document.getElementById('videoPlayer').src = embedUrl;
+  document.getElementById('videoNowPlaying').textContent = '▶ Now Playing: ' + video.name;
+}
